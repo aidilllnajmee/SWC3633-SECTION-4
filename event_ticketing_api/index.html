@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventHub API - SWC3633/SWC4443 Final Project</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2563eb;
+            --bg-dark: #0f172a;
+            --bg-card: #ffffff;
+            --text-main: #0f172a;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+        }
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #f8fafc; color: var(--text-main); line-height: 1.6; }
+
+        .hero {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            color: #ffffff;
+            padding: 60px 20px 48px;
+            text-align: center;
+            border-bottom: 4px solid var(--primary);
+        }
+        .hero-badge {
+            display: inline-block;
+            background: rgba(37, 99, 235, 0.2);
+            color: #93c5fd;
+            border: 1px solid rgba(147, 197, 253, 0.3);
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+        .hero h1 { font-size: 32px; font-weight: 800; margin-bottom: 12px; }
+        .hero p { max-width: 760px; margin: 0 auto 24px; color: #94a3b8; font-size: 15px; }
+        
+        .container { max-width: 1160px; margin: 0 auto; padding: 40px 20px; }
+        
+        .section-title { font-size: 20px; font-weight: 700; margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+        .section-subtitle { color: var(--text-muted); font-size: 14px; margin-bottom: 24px; }
+
+        /* Role Cards Grid */
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+            margin-bottom: 48px;
+        }
+        .portal-card {
+            background: #ffffff;
+            border-radius: 16px;
+            border: 1px solid var(--border);
+            padding: 28px;
+            box-shadow: 0 4px 6px -1px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            transition: all 0.2s ease;
+        }
+        .portal-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 16px 24px -6px rgba(0,0,0,0.1);
+        }
+        .portal-icon {
+            font-size: 36px;
+            margin-bottom: 16px;
+        }
+        .student-tag {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            padding: 4px 10px;
+            border-radius: 20px;
+            display: inline-block;
+            margin-bottom: 12px;
+            width: fit-content;
+        }
+        .tag-s1 { background: #dbeafe; color: #1d4ed8; }
+        .tag-s2 { background: #f3e8ff; color: #7c3aed; }
+        .tag-s3 { background: #dcfce7; color: #15803d; }
+        
+        .portal-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+        .portal-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; flex: 1; }
+        .features-list { list-style: none; margin-bottom: 24px; font-size: 13px; }
+        .features-list li { margin-bottom: 8px; display: flex; align-items: center; gap: 8px; }
+
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            padding: 12px 20px;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            cursor: pointer;
+            transition: all 0.2s;
+            border: none;
+        }
+        .btn-primary { background: var(--primary); color: #fff; }
+        .btn-primary:hover { background: #1d4ed8; }
+        .btn-purple { background: #7c3aed; color: #fff; }
+        .btn-purple:hover { background: #6d28d9; }
+        .btn-green { background: #059669; color: #fff; }
+        .btn-green:hover { background: #047857; }
+        
+    </style>
+</head>
+<body>
+    <header class="hero">
+        <h1>Event Ticketing and Venue Booking System</h1>
+        <p>A comprehensive, standards-compliant RESTful Web API featuring JWT Authentication, Role-Based Access Control, Concurrency-Safe Reservations, and Genuine Third-Party QR Code Verification API Integration.</p>
+    </header>
+
+    <div class="container">
+        <div class="portal-grid">
+            <!-- Administrator Portal -->
+            <div class="portal-card">
+                <div class="portal-icon">🏛️</div>
+                <h3>Administrator Dashboard</h3>
+                <p class="portal-desc">Enterprise management portal for system administrators to oversee venues, user accounts, platform-wide analytics, and live API telemetry.</p>
+                <ul class="features-list">
+                    <li>✅ Venue CRUD (Capacities, Pricing, Locations)</li>
+                    <li>✅ User Management & RBAC Role Assignment</li>
+                    <li>✅ Platform KPI Metrics & Gross Revenue</li>
+                    <li>✅ Live Request Latency & API Audit Trail</li>
+                </ul>
+                <a href="frontends/admin/login.html" class="btn btn-primary">Launch Admin Dashboard ➔</a>
+            </div>
+
+            <!-- Organiser Portal -->
+            <div class="portal-card">
+                <div class="portal-icon">🎪</div>
+                <h3>Organiser Workstation</h3>
+                <p class="portal-desc">Event management interface for concert and conference hosts to publish schedules, manage ticket tiers, and inspect attendee rosters.</p>
+                <ul class="features-list">
+                    <li>✅ Event Scheduling & Publishing Workflow</li>
+                    <li>✅ Real-Time Capacity & Ticket Inventory Bars</li>
+                    <li>✅ Attendee Registry & Verification Pass Inspection</li>
+                    <li>✅ Venue Constraint & Date Bound Checks</li>
+                </ul>
+                <a href="frontends/organiser/login.html" class="btn btn-purple">Launch Organiser Portal ➔</a>
+            </div>
+
+            <!-- Customer Portal -->
+            <div class="portal-card">
+                <div class="portal-icon">🎟️</div>
+                <h3>Customer Ticketing Portal</h3>
+                <p class="portal-desc">Public consumer app for attendees to browse conferences, search concerts, reserve seats, and receive authentic digital QR entry passes.</p>
+                <ul class="features-list">
+                    <li>✅ Live Search & Category Filtering Pills</li>
+                    <li>✅ Multi-Gateway Checkout (FPX, Cards, E-Wallet)</li>
+                    <li>✅ Genuine External API QR Ticket Generation</li>
+                    <li>✅ Instant Ticket Cancellation & Inventory Restoral</li>
+                </ul>
+                <a href="frontends/customer/index.html" class="btn btn-green">Launch Customer Portal ➔</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+

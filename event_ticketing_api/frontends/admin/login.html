@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventHub - Administrator Sign In</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+    <style>
+        body {
+            background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 24px;
+            color: #0f172a;
+        }
+        .login-wrapper {
+            width: 100%;
+            max-width: 440px;
+        }
+        .login-card {
+            background: #ffffff;
+            border-radius: 20px;
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.35);
+            padding: 36px 32px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .login-brand {
+            text-align: center;
+            margin-bottom: 24px;
+        }
+        .login-icon {
+            font-size: 42px;
+            display: inline-block;
+            margin-bottom: 8px;
+            filter: drop-shadow(0 4px 6px rgba(0,0,0,0.1));
+        }
+        .login-badge {
+            display: inline-block;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            background: #dbeafe;
+            color: #1d4ed8;
+            padding: 4px 12px;
+            border-radius: 20px;
+            margin-bottom: 8px;
+        }
+        .login-title {
+            font-size: 22px;
+            font-weight: 800;
+            color: #0f172a;
+            margin-bottom: 6px;
+        }
+        .login-subtitle {
+            font-size: 13px;
+            color: #64748b;
+            line-height: 1.4;
+        }
+        .form-group {
+            margin-bottom: 18px;
+            text-align: left;
+        }
+        .form-group label {
+            display: block;
+            font-size: 13px;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 6px;
+        }
+        .input-with-icon {
+            position: relative;
+        }
+        .input-icon {
+            position: absolute;
+            left: 14px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 15px;
+            color: #94a3b8;
+        }
+        .form-control {
+            width: 100%;
+            padding: 12px 14px 12px 42px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 14px;
+            font-family: inherit;
+            transition: all 0.2s;
+            background: #f8fafc;
+        }
+        .form-control:focus {
+            outline: none;
+            border-color: #2563eb;
+            background: #ffffff;
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.15);
+        }
+        .btn-submit {
+            width: 100%;
+            padding: 13px;
+            background: #2563eb;
+            color: #ffffff;
+            border: none;
+            border-radius: 10px;
+            font-size: 14px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+            margin-top: 6px;
+        }
+        .btn-submit:hover:not(:disabled) {
+            background: #1d4ed8;
+            transform: translateY(-1px);
+            box-shadow: 0 8px 16px -4px rgba(37, 99, 235, 0.3);
+        }
+        .btn-submit:disabled {
+            opacity: 0.7;
+            cursor: not-allowed;
+        }
+        .alert-box {
+            padding: 12px 14px;
+            border-radius: 10px;
+            font-size: 13px;
+            margin-bottom: 18px;
+            display: none;
+            line-height: 1.4;
+        }
+        .alert-danger {
+            background: #fef2f2;
+            border: 1px solid #fecaca;
+            color: #991b1b;
+        }
+        .alert-success {
+            background: #ecfdf5;
+            border: 1px solid #a7f3d0;
+            color: #065f46;
+        }
+        .alert-info {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            color: #1e40af;
+        }
+        .demo-credentials-box {
+            margin-top: 24px;
+            padding: 16px;
+            background: #f8fafc;
+            border: 1px dashed #cbd5e1;
+            border-radius: 12px;
+            text-align: left;
+        }
+        .demo-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+        .demo-header span {
+            font-size: 12px;
+            font-weight: 700;
+            color: #475569;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        .demo-btn {
+            background: #ffffff;
+            border: 1px solid #cbd5e1;
+            padding: 8px 12px;
+            border-radius: 8px;
+            width: 100%;
+            text-align: left;
+            cursor: pointer;
+            transition: all 0.15s;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .demo-btn:hover {
+            border-color: #2563eb;
+            background: #f0f7ff;
+        }
+        .demo-btn strong {
+            display: block;
+            font-size: 13px;
+            color: #1e293b;
+        }
+        .demo-btn small {
+            font-size: 11px;
+            color: #64748b;
+        }
+        .demo-btn .badge-click {
+            font-size: 11px;
+            color: #2563eb;
+            font-weight: 600;
+        }
+        .footer-nav {
+            text-align: center;
+            margin-top: 20px;
+            font-size: 13px;
+        }
+        .footer-nav a {
+            color: #94a3b8;
+            text-decoration: none;
+            transition: color 0.15s;
+        }
+        .footer-nav a:hover {
+            color: #ffffff;
+        }
+        .footer-nav .divider {
+            color: #475569;
+            margin: 0 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="login-wrapper">
+        <div class="login-card">
+            <div class="login-brand">
+                <span class="login-icon">🏛️</span><br>
+                <span class="login-badge">EventHub Security</span>
+                <h1 class="login-title">Administrator Sign In</h1>
+                <p class="login-subtitle">Authenticate to access venue controls, RBAC management, and live API telemetry.</p>
+            </div>
+
+            <!-- Existing Session Banner -->
+            <div id="session-banner" class="alert-box alert-info">
+                <div>You are already signed in as <strong id="session-name">Admin</strong>.</div>
+                <div style="margin-top: 8px; display: flex; gap: 8px;">
+                    <a href="index.html" class="btn btn-primary btn-sm" style="flex:1; text-align:center;">Enter Dashboard ➔</a>
+                    <button type="button" class="btn btn-outline-danger btn-sm" onclick="clearExistingSession()">Switch User</button>
+                </div>
+            </div>
+
+            <!-- Alerts -->
+            <div id="error-alert" class="alert-box alert-danger"></div>
+            <div id="success-alert" class="alert-box alert-success"></div>
+
+            <!-- Login Form -->
+            <form id="admin-login-form" onsubmit="handleAdminLogin(event)">
+                <div class="form-group">
+                    <label for="admin-email">Administrator Email</label>
+                    <div class="input-with-icon">
+                        <span class="input-icon">✉️</span>
+                        <input type="email" id="admin-email" class="form-control" placeholder="admin@eventhub.my" required autocomplete="username">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="admin-password">Account Password</label>
+                    <div class="input-with-icon">
+                        <span class="input-icon">🔒</span>
+                        <input type="password" id="admin-password" class="form-control" placeholder="••••••••••••" required autocomplete="current-password">
+                    </div>
+                </div>
+
+                <button type="submit" id="btn-submit-text" class="btn-submit">
+                    Sign In to Dashboard ➔
+                </button>
+            </form>
+
+            <!-- Quick Demo Credentials Fill -->
+            <div class="demo-credentials-box">
+                <div class="demo-header">
+                    <span>⚡ Quick Demo Credentials</span>
+                </div>
+                <button type="button" class="demo-btn" onclick="fillAdminCredentials()">
+                    <div>
+                        <strong>System Administrator</strong>
+                        <small>admin@eventhub.my &bull; Password123!</small>
+                    </div>
+                    <span class="badge-click">Fill &rarr;</span>
+                </button>
+            </div>
+        </div>
+
+        <div class="footer-nav">
+            <a href="../../index.html">&larr; Back to Master Hub</a>
+            <span class="divider">&bull;</span>
+            <a href="../organiser/login.html">Organiser Sign In &rarr;</a>
+        </div>
+    </div>
+
+    <script src="../../shared/js/api-client.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const token = ApiClient.getToken();
+            const user = ApiClient.getUser();
+
+            if (token && user && user.role === 'admin') {
+                document.getElementById('session-banner').style.display = 'block';
+                document.getElementById('session-name').textContent = user.full_name || 'System Administrator';
+            }
+        });
+
+        function clearExistingSession() {
+            localStorage.removeItem('eventhub_token');
+            localStorage.removeItem('eventhub_user');
+            document.getElementById('session-banner').style.display = 'none';
+        }
+
+        function fillAdminCredentials() {
+            document.getElementById('admin-email').value = 'admin@eventhub.my';
+            document.getElementById('admin-password').value = 'Password123!';
+            hideAlerts();
+        }
+
+        function hideAlerts() {
+            document.getElementById('error-alert').style.display = 'none';
+            document.getElementById('success-alert').style.display = 'none';
+        }
+
+        async function handleAdminLogin(e) {
+            e.preventDefault();
+            hideAlerts();
+
+            const email = document.getElementById('admin-email').value.trim();
+            const password = document.getElementById('admin-password').value;
+            const btn = document.getElementById('btn-submit-text');
+
+            if (!email || !password) {
+                showError("Please enter both email and password.");
+                return;
+            }
+
+            btn.disabled = true;
+            btn.innerHTML = "Authenticating with REST API...";
+
+            try {
+                const res = await ApiClient.post('auth/login', { email, password });
+                
+                if (!res.data || !res.data.token) {
+                    throw new Error("Invalid response envelope received from server.");
+                }
+
+                // Check Role-Based Access Control
+                if (res.data.user.role !== 'admin') {
+                    showError(`Access Denied: This account is registered as '${res.data.user.role}'. Only users with 'admin' privileges can access this dashboard.`);
+                    btn.disabled = false;
+                    btn.innerHTML = "Sign In to Dashboard ➔";
+                    return;
+                }
+
+                // Store credentials
+                ApiClient.setSession(res.data.token, res.data.user);
+
+                const successBox = document.getElementById('success-alert');
+                successBox.textContent = `Welcome back, ${res.data.user.full_name}! Redirecting to Admin Dashboard...`;
+                successBox.style.display = 'block';
+
+                setTimeout(() => {
+                    window.location.href = 'index.html';
+                }, 600);
+
+            } catch (err) {
+                console.error("Login failed:", err);
+                const msg = err.message || "Invalid email or password combination.";
+                showError(msg);
+                btn.disabled = false;
+                btn.innerHTML = "Sign In to Dashboard ➔";
+            }
+        }
+
+        function showError(msg) {
+            const errBox = document.getElementById('error-alert');
+            errBox.textContent = msg;
+            errBox.style.display = 'block';
+        }
+    </script>
+</body>
+</html>
+

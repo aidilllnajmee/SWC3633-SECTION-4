@@ -1,0 +1,467 @@
+{
+  "info": {
+    "_postman_id": "7b8f9e01-2026-4fa2-bc89-9a74e50d12ab",
+    "name": "Event Ticketing & Venue Booking System - RESTful API",
+    "description": "Comprehensive Postman Collection for SWC3633/SWC4443 Web API Development Project. Covers all CRUD operations, authentication, RBAC, input validation, external QR code generation, pagination, and error scenarios.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "1. System & Health",
+      "item": [
+        {
+          "name": "GET API Health & Service Status",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/",
+              "host": ["{{base_url}}"],
+              "path": [""]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "2. Authentication (/auth)",
+      "item": [
+        {
+          "name": "POST Login - Administrator",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "pm.test('Status code is 200', function () { pm.response.to.have.status(200); });",
+                  "pm.test('Token received', function () { pm.expect(jsonData.data.token).to.be.a('string'); });",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.environment.set('admin_token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@eventhub.my\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "POST Login - Organiser",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.environment.set('organiser_token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"sarah.organiser@eventhub.my\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "POST Login - Customer",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.data && jsonData.data.token) {",
+                  "    pm.environment.set('customer_token', jsonData.data.token);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"aidil.customer@eventhub.my\",\n  \"password\": \"Password123!\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/login", "host": ["{{base_url}}"], "path": ["auth", "login"] }
+          }
+        },
+        {
+          "name": "POST Register New Customer",
+          "request": {
+            "method": "POST",
+            "header": [{ "key": "Content-Type", "value": "application/json" }],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Danial Hakim\",\n  \"email\": \"danial.test@example.com\",\n  \"password\": \"SecurePass123!\",\n  \"phone_number\": \"+6014-8899001\",\n  \"role\": \"customer\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/auth/register", "host": ["{{base_url}}"], "path": ["auth", "register"] }
+          }
+        },
+        {
+          "name": "GET Current Authenticated Profile (/auth/me)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/auth/me", "host": ["{{base_url}}"], "path": ["auth", "me"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "3. Users Resource (/users)",
+      "item": [
+        {
+          "name": "GET All Users (Admin Only)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"] }
+          }
+        },
+        {
+          "name": "GET User by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/users/1", "host": ["{{base_url}}"], "path": ["users", "1"] }
+          }
+        },
+        {
+          "name": "POST Create User (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Khairul Anuar\",\n  \"email\": \"khairul.staff@eventhub.my\",\n  \"password\": \"Password123!\",\n  \"role\": \"organiser\",\n  \"phone_number\": \"+6019-7766554\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"] }
+          }
+        },
+        {
+          "name": "PUT Update User Profile",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"full_name\": \"Khairul Anuar (Senior Organiser)\",\n  \"email\": \"khairul.senior@eventhub.my\",\n  \"phone_number\": \"+6019-7766999\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/users/2", "host": ["{{base_url}}"], "path": ["users", "2"] }
+          }
+        },
+        {
+          "name": "DELETE User by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/users/6", "host": ["{{base_url}}"], "path": ["users", "6"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "4. Venues Resource (/venues)",
+      "item": [
+        {
+          "name": "GET All Venues",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/venues", "host": ["{{base_url}}"], "path": ["venues"] }
+          }
+        },
+        {
+          "name": "GET Venue by ID with Scheduled Events",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/venues/1", "host": ["{{base_url}}"], "path": ["venues", "1"] }
+          }
+        },
+        {
+          "name": "POST Create New Venue (Admin Only)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venue_name\": \"Sunway Pyramid Convention Centre\",\n  \"address\": \"3, Jalan PJS 11/15, Bandar Sunway\",\n  \"city\": \"Petaling Jaya\",\n  \"capacity\": 2500,\n  \"contact_email\": \"spcc@sunway.com.my\",\n  \"contact_phone\": \"+603-74928000\",\n  \"hourly_rate\": 750.00\n}"
+            },
+            "url": { "raw": "{{base_url}}/venues", "host": ["{{base_url}}"], "path": ["venues"] }
+          }
+        },
+        {
+          "name": "PUT Update Venue Details",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venue_name\": \"Sunway Pyramid Convention Centre (Grand)\",\n  \"address\": \"3, Jalan PJS 11/15, Bandar Sunway\",\n  \"city\": \"Petaling Jaya\",\n  \"capacity\": 2800,\n  \"contact_email\": \"spcc.events@sunway.com.my\",\n  \"contact_phone\": \"+603-74928000\",\n  \"hourly_rate\": 800.00\n}"
+            },
+            "url": { "raw": "{{base_url}}/venues/2", "host": ["{{base_url}}"], "path": ["venues", "2"] }
+          }
+        },
+        {
+          "name": "DELETE Venue by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/venues/5", "host": ["{{base_url}}"], "path": ["venues", "5"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "5. Events Resource (/events)",
+      "item": [
+        {
+          "name": "GET Events - Pagination & Filtering",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/events?page=1&limit=5&category_id=1&sort=ticket_price&order=asc",
+              "host": ["{{base_url}}"],
+              "path": ["events"],
+              "query": [
+                { "key": "page", "value": "1" },
+                { "key": "limit", "value": "5" },
+                { "key": "category_id", "value": "1" },
+                { "key": "sort", "value": "ticket_price" },
+                { "key": "order", "value": "asc" }
+              ]
+            }
+          }
+        },
+        {
+          "name": "GET Events - Search Keyword",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": {
+              "raw": "{{base_url}}/events?search=Summit",
+              "host": ["{{base_url}}"],
+              "path": ["events"],
+              "query": [{ "key": "search", "value": "Summit" }]
+            }
+          }
+        },
+        {
+          "name": "GET Event by ID",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/events/1", "host": ["{{base_url}}"], "path": ["events", "1"] }
+          }
+        },
+        {
+          "name": "POST Create New Event (Organiser)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{organiser_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"ASEAN Cyber Resilience Forum 2026\",\n  \"description\": \"Two-day intensive cybersecurity summit addressing zero trust, threat intel, and cloud resilience.\",\n  \"category_id\": 1,\n  \"venue_id\": 1,\n  \"start_time\": \"2026-11-25 09:00:00\",\n  \"end_time\": \"2026-11-26 17:00:00\",\n  \"ticket_price\": 180.00,\n  \"total_tickets\": 400\n}"
+            },
+            "url": { "raw": "{{base_url}}/events", "host": ["{{base_url}}"], "path": ["events"] }
+          }
+        },
+        {
+          "name": "PUT Update Event",
+          "request": {
+            "method": "PUT",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{organiser_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"title\": \"ASEAN Cyber Resilience Forum 2026 (Updated)\",\n  \"description\": \"Expanded schedule with live red team / blue team cyber wargames.\",\n  \"ticket_price\": 195.00,\n  \"total_tickets\": 450\n}"
+            },
+            "url": { "raw": "{{base_url}}/events/1", "host": ["{{base_url}}"], "path": ["events", "1"] }
+          }
+        },
+        {
+          "name": "DELETE Event by ID",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{admin_token}}" }],
+            "url": { "raw": "{{base_url}}/events/6", "host": ["{{base_url}}"], "path": ["events", "6"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6. Bookings & Third-Party QR API (/bookings)",
+      "item": [
+        {
+          "name": "GET Customer Bookings (Scoping)",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customer_token}}" }],
+            "url": { "raw": "{{base_url}}/bookings", "host": ["{{base_url}}"], "path": ["bookings"] }
+          }
+        },
+        {
+          "name": "POST Create Booking (Calls External QR API)",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customer_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_id\": 1,\n  \"ticket_quantity\": 2,\n  \"payment_method\": \"Online Banking (FPX)\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/bookings", "host": ["{{base_url}}"], "path": ["bookings"] }
+          }
+        },
+        {
+          "name": "GET Booking by ID",
+          "request": {
+            "method": "GET",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customer_token}}" }],
+            "url": { "raw": "{{base_url}}/bookings/1", "host": ["{{base_url}}"], "path": ["bookings", "1"] }
+          }
+        },
+        {
+          "name": "DELETE Cancel Booking (Restores Inventory)",
+          "request": {
+            "method": "DELETE",
+            "header": [{ "key": "Authorization", "value": "Bearer {{customer_token}}" }],
+            "url": { "raw": "{{base_url}}/bookings/5", "host": ["{{base_url}}"], "path": ["bookings", "5"] }
+          }
+        }
+      ]
+    },
+    {
+      "name": "7. Negative & Error Handling Tests",
+      "item": [
+        {
+          "name": "401 Unauthorized - Missing Token",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/users", "host": ["{{base_url}}"], "path": ["users"] }
+          }
+        },
+        {
+          "name": "403 Forbidden - Customer Creating Venue",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customer_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venue_name\": \"Unauthorized Venue Creation\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/venues", "host": ["{{base_url}}"], "path": ["venues"] }
+          }
+        },
+        {
+          "name": "404 Not Found - Non-existent Resource",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": { "raw": "{{base_url}}/events/99999", "host": ["{{base_url}}"], "path": ["events", "99999"] }
+          }
+        },
+        {
+          "name": "422 Unprocessable Entity - Invalid Validation",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{admin_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"venue_name\": \"\",\n  \"capacity\": -50\n}"
+            },
+            "url": { "raw": "{{base_url}}/venues", "host": ["{{base_url}}"], "path": ["venues"] }
+          }
+        },
+        {
+          "name": "409 Conflict - Exceeding Available Tickets",
+          "request": {
+            "method": "POST",
+            "header": [
+              { "key": "Authorization", "value": "Bearer {{customer_token}}" },
+              { "key": "Content-Type", "value": "application/json" }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"event_id\": 1,\n  \"ticket_quantity\": 999999,\n  \"payment_method\": \"Credit Card\"\n}"
+            },
+            "url": { "raw": "{{base_url}}/bookings", "host": ["{{base_url}}"], "path": ["bookings"] }
+          }
+        }
+      ]
+    }
+  ],
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://localhost:8000/api/index.php",
+      "type": "string"
+    },
+    {
+      "key": "admin_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "customer_token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "organiser_token",
+      "value": "",
+      "type": "string"
+    }
+  ]
+}
+

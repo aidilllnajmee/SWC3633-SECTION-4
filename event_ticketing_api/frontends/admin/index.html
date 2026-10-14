@@ -1,0 +1,377 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EventHub - Administrator Dashboard</title>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app" class="app-layout">
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="brand">
+                <div class="brand-icon">🏛️</div>
+                <div class="brand-text">
+                    <h2>EventHub</h2>
+                    <span>Admin Control Center</span>
+                </div>
+            </div>
+
+            <nav class="sidebar-nav">
+                <a href="#dashboard" class="nav-item active" data-tab="dashboard">
+                    <span class="icon">📊</span> Overview & KPIs
+                </a>
+                <a href="#venues" class="nav-item" data-tab="venues">
+                    <span class="icon">🏢</span> Venues Management
+                </a>
+                <a href="#users" class="nav-item" data-tab="users">
+                    <span class="icon">👥</span> User Accounts
+                </a>
+                <a href="#events" class="nav-item" data-tab="events">
+                    <span class="icon">🎪</span> Global Events Moderation
+                </a>
+                <a href="#logs" class="nav-item" data-tab="logs">
+                    <span class="icon">📜</span> Live API Audit Logs
+                </a>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-pill">
+                    <div class="user-avatar" id="admin-initials">SA</div>
+                    <div class="user-info">
+                        <strong id="admin-name">System Administrator</strong>
+                        <small id="admin-email">admin@eventhub.my</small>
+                    </div>
+                </div>
+                <button class="btn btn-outline-danger btn-sm w-full mt-2" onclick="logoutAdmin()">Sign Out</button>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content">
+            <!-- Top Navbar -->
+            <header class="topbar">
+                <div class="topbar-left">
+                    <h1 id="page-title">Executive Dashboard</h1>
+                    <p class="subtitle">Real-time metrics and central system administration</p>
+                </div>
+                <div class="topbar-right">
+                    <div class="badge-role">Role: Administrator</div>
+                    <button class="btn btn-secondary btn-sm" onclick="reloadCurrentTab()">🔄 Refresh Data</button>
+                    <a href="../../index.html" class="btn btn-outline btn-sm">Master Hub ↗</a>
+                </div>
+            </header>
+
+            <!-- Dashboard Tab -->
+            <section id="tab-dashboard" class="tab-pane active">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-icon bg-blue">💰</div>
+                        <div class="metric-data">
+                            <span class="label">Gross Ticket Revenue</span>
+                            <h3 id="stat-revenue">RM 0.00</h3>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon bg-purple">🎟️</div>
+                        <div class="metric-data">
+                            <span class="label">Tickets Reserved</span>
+                            <h3 id="stat-tickets">0</h3>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon bg-green">🎪</div>
+                        <div class="metric-data">
+                            <span class="label">Total Events</span>
+                            <h3 id="stat-events">0</h3>
+                        </div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-icon bg-amber">🏢</div>
+                        <div class="metric-data">
+                            <span class="label">Active Venues</span>
+                            <h3 id="stat-venues">0</h3>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="grid-2-col mt-4">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Confirmed Bookings</h3>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="data-table" id="recent-bookings-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Ref</th>
+                                            <th>Customer</th>
+                                            <th>Event</th>
+                                            <th>Qty</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="recent-bookings-body">
+                                        <tr><td colspan="5" class="text-center">Loading transactions...</td></tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>System Health & Architecture</h3>
+                        </div>
+                        <div class="card-body">
+                            <ul class="system-specs">
+                                <li><strong>RESTful API Protocol:</strong> HTTP/1.1 with JSON Exchange</li>
+                                <li><strong>Security Layer:</strong> JWT HMAC-SHA256 & Role Scoping</li>
+                                <li><strong>Database Engine:</strong> MySQL 8 / MariaDB (Dual PDO Fallback)</li>
+                                <li><strong>Third-Party Integration:</strong> External QR Code Verification API</li>
+                                <li><strong>Active Rate Limiter:</strong> 100 requests/minute per client IP</li>
+                            </ul>
+                            <div class="alert-box success mt-3">
+                                🟢 All micro-services and database connection pools are operational.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Venues Tab -->
+            <section id="tab-venues" class="tab-pane">
+                <div class="card">
+                    <div class="card-header flex-between">
+                        <div>
+                            <h3>Registered Venues & Facilities</h3>
+                            <p class="card-subtitle">Manage physical auditoriums, capacities, and rates</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="openAddVenueModal()">+ Add New Venue</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Venue Name</th>
+                                        <th>City</th>
+                                        <th>Max Capacity</th>
+                                        <th>Hourly Rate</th>
+                                        <th>Contact Email</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="venues-table-body">
+                                    <tr><td colspan="7" class="text-center">Loading venues...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Users Tab -->
+            <section id="tab-users" class="tab-pane">
+                <div class="card">
+                    <div class="card-header flex-between">
+                        <div>
+                            <h3>User Accounts & Role Permissions</h3>
+                            <p class="card-subtitle">Manage administrative, organiser, and customer access</p>
+                        </div>
+                        <button class="btn btn-primary" onclick="openAddUserModal()">+ Register Account</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="filter-bar mb-3">
+                            <label>Filter by Role:</label>
+                            <select id="user-role-filter" class="form-input w-auto" onchange="loadUsers()">
+                                <option value="">All Roles</option>
+                                <option value="admin">Administrators</option>
+                                <option value="organiser">Organisers</option>
+                                <option value="customer">Customers</option>
+                            </select>
+                        </div>
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Full Name</th>
+                                        <th>Email Address</th>
+                                        <th>Role</th>
+                                        <th>Phone</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="users-table-body">
+                                    <tr><td colspan="6" class="text-center">Loading users...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Events Tab -->
+            <section id="tab-events" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Global Events Moderation</h3>
+                        <p class="card-subtitle">System-wide monitoring of scheduled conferences and shows</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Title</th>
+                                        <th>Category</th>
+                                        <th>Venue</th>
+                                        <th>Organiser</th>
+                                        <th>Price</th>
+                                        <th>Tickets (Avail/Total)</th>
+                                        <th>Status</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="events-table-body">
+                                    <tr><td colspan="8" class="text-center">Loading events...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Logs Tab -->
+            <section id="tab-logs" class="tab-pane">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>Real-Time API Audit & Latency Trail</h3>
+                        <p class="card-subtitle">Monitors HTTP status codes, response latency, and IP telemetry</p>
+                    </div>
+                    <div class="card-body">
+                        <div class="table-responsive">
+                            <table class="data-table">
+                                <thead>
+                                    <tr>
+                                        <th>Timestamp</th>
+                                        <th>HTTP Method</th>
+                                        <th>URI Endpoint</th>
+                                        <th>Status</th>
+                                        <th>User ID</th>
+                                        <th>Latency (ms)</th>
+                                        <th>Client IP</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="logs-table-body">
+                                    <tr><td colspan="7" class="text-center">Loading audit trail...</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal: Add/Edit Venue -->
+    <div id="venue-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3 id="venue-modal-title">Register New Venue</h3>
+                <button class="btn-close" onclick="closeVenueModal()">✕</button>
+            </div>
+            <form id="venue-form" onsubmit="handleVenueSubmit(event)">
+                <input type="hidden" id="venue-id">
+                <div class="form-group">
+                    <label>Venue Name *</label>
+                    <input type="text" id="venue-name" class="form-input" required placeholder="e.g. Grand Plenary Hall">
+                </div>
+                <div class="form-group">
+                    <label>Street Address *</label>
+                    <input type="text" id="venue-address" class="form-input" required placeholder="e.g. Jalan Shamelin Perkasa">
+                </div>
+                <div class="grid-2-col">
+                    <div class="form-group">
+                        <label>City *</label>
+                        <input type="text" id="venue-city" class="form-input" required placeholder="e.g. Kuala Lumpur">
+                    </div>
+                    <div class="form-group">
+                        <label>Max Seating Capacity *</label>
+                        <input type="number" id="venue-capacity" class="form-input" required min="10" placeholder="1000">
+                    </div>
+                </div>
+                <div class="grid-2-col">
+                    <div class="form-group">
+                        <label>Contact Email *</label>
+                        <input type="email" id="venue-email" class="form-input" required placeholder="venue@example.com">
+                    </div>
+                    <div class="form-group">
+                        <label>Contact Phone *</label>
+                        <input type="text" id="venue-phone" class="form-input" required placeholder="+6012-3456789">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Hourly Rental Rate (RM) *</label>
+                    <input type="number" id="venue-rate" class="form-input" required min="0" step="0.01" placeholder="350.00">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeVenueModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary" id="venue-submit-btn">Save Venue</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Modal: Add User -->
+    <div id="user-modal" class="modal-overlay hidden">
+        <div class="modal-box">
+            <div class="modal-header">
+                <h3>Create User Account</h3>
+                <button class="btn-close" onclick="closeUserModal()">✕</button>
+            </div>
+            <form id="user-form" onsubmit="handleUserSubmit(event)">
+                <div class="form-group">
+                    <label>Full Name *</label>
+                    <input type="text" id="user-fullname" class="form-input" required placeholder="e.g. Muhammad Farhan">
+                </div>
+                <div class="form-group">
+                    <label>Email Address *</label>
+                    <input type="email" id="user-email" class="form-input" required placeholder="farhan@example.com">
+                </div>
+                <div class="grid-2-col">
+                    <div class="form-group">
+                        <label>Role Assignment *</label>
+                        <select id="user-role" class="form-input" required>
+                            <option value="customer">Customer</option>
+                            <option value="organiser">Organiser</option>
+                            <option value="admin">Administrator</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Phone Number</label>
+                        <input type="text" id="user-phone" class="form-input" placeholder="+6011-22334455">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Initial Password *</label>
+                    <input type="password" id="user-password" class="form-input" required minlength="6" placeholder="Min 6 characters">
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closeUserModal()">Cancel</button>
+                    <button type="submit" class="btn btn-primary">Create Account</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script src="../../shared/js/api-client.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
+
